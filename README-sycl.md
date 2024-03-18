@@ -32,7 +32,7 @@ The llama.cpp SYCL backend supports:
 
 *Upcoming support : AMD GPUs*.
 
-For **Intel CPUs**, it is recommend to use llama.cpp for [x86](README.md#intel-onemkl) approach.
+For **Intel CPUs**, it is recommended to the use llama.cpp for [x86](README.md#intel-onemkl) approach.
 
 ## News
 
