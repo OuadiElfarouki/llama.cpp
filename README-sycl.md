@@ -18,10 +18,10 @@
 
 **oneAPI** is an open ecosystem and a standard-based specification, supporting multiple architectures including but not limited to intel CPUs, GPUs and FPGAs. The key components of the oneAPI ecosystem include : 
 
-- **DPCPP** *(Data Parallel C++)* : The primary oneAPI SYCL implementation, which includes the icpx/icx Compilers.
-- **oneAPI Libraries** : A set of highly optimized libraries targeting multiple domains *(e.g. oneMKL - Math Kernel Library)*.
-- **oneAPI LevelZero** : A high performance low level interface for fine-grained control over intel iGPUs and dGPUs.
-- **Nvidia & AMD Plugins** : These are plugins extending oneAPI's DPCPP support to SYCL on Nvidia and AMD GPU targets. 
+- **DPCPP** *(Data Parallel C++)*: The primary oneAPI SYCL implementation, which includes the icpx/icx Compilers.
+- **oneAPI Libraries**: A set of highly optimized libraries targeting multiple domains *(e.g. oneMKL - Math Kernel Library)*.
+- **oneAPI LevelZero**: A high performance low level interface for fine-grained control over intel iGPUs and dGPUs.
+- **Nvidia & AMD Plugins**: These are plugins extending oneAPI's DPCPP support to SYCL on Nvidia and AMD GPU targets. 
 
 ### Llama.cpp + SYCL 
 To avoid re-inventing the wheel, this SYCL "backend" follows the same design found in other llama.cpp BLAS-based paths such as * OpenBLAS, cuBLAS, CLBlast etc..*. The oneAPI's [SYCLomatic](https://github.com/oneapi-src/SYCLomatic) open-source migration tool (Commercial release [Intel® DPC++ Compatibility Tool](https://www.intel.com/content/www/us/en/developer/tools/oneapi/dpc-compatibility-tool.html)) was used for this purpose.
