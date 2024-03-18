@@ -509,7 +509,7 @@ Note:
 
   Please double-check with `sudo sycl-ls`.
 
-  If it's present in the list, please add video/render group to your user then **logout/login** or restart your system :
+  If it's present in the list, please add video/render group to your user then **logout/login** or restart your system:
 
   ```
   sudo usermod -aG render <username>
