@@ -24,7 +24,7 @@
 - **Nvidia & AMD Plugins**: These are plugins extending oneAPI's DPCPP support to SYCL on Nvidia and AMD GPU targets. 
 
 ### Llama.cpp + SYCL 
-To avoid re-inventing the wheel, this SYCL "backend" follows the same design found in other llama.cpp BLAS-based paths such as * OpenBLAS, cuBLAS, CLBlast etc..*. The oneAPI's [SYCLomatic](https://github.com/oneapi-src/SYCLomatic) open-source migration tool (Commercial release [Intel® DPC++ Compatibility Tool](https://www.intel.com/content/www/us/en/developer/tools/oneapi/dpc-compatibility-tool.html)) was used for this purpose.
+This SYCL "backend" follows the same design found in other llama.cpp BLAS-based paths such as * OpenBLAS, cuBLAS, CLBlast etc..*. The oneAPI's [SYCLomatic](https://github.com/oneapi-src/SYCLomatic) open-source migration tool (Commercial release [Intel® DPC++ Compatibility Tool](https://www.intel.com/content/www/us/en/developer/tools/oneapi/dpc-compatibility-tool.html)) was used for this purpose.
 
 The llama.cpp SYCL backend supports: 
 - Intel GPUs.
