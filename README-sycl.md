@@ -197,7 +197,7 @@ Following guidelines/code snippets assume the default installation values. Other
 
 Upon a successful installation, SYCL is enabled for the available intel devices, along with relevant libraries such as oneAPI MKL for intel GPUs.
 
-- **Bringing support to Nvidia GPUs**
+- **Adding support to Nvidia GPUs**
 
 **oneAPI** : In order to enable SYCL support on Nvidia GPUs through oneAPI, please install the [Codeplay oneAPI Plugin for Nvidia GPUs](https://developer.codeplay.com/products/oneapi/nvidia/download). User should also make sure the plugin version matches the installed base toolkit one *(previous step)* for a seamless "oneAPI on Nvidia GPU" setup.
 
