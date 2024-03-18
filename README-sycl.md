@@ -59,7 +59,7 @@ For **Intel CPUs**, it is recommended to the use llama.cpp for [x86](README.md#i
 
 ## Supported devices
 
-### intel GPUs
+### Intel GPUs
 
 The BLAS acceleration oneAPI Math Kernel Library which comes with the oneAPI base-toolkit natively supports intel GPUs. In order to make it "visible" while building/running llama.cpp, simply run the following : 
 ```sh
