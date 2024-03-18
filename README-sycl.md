@@ -132,18 +132,18 @@ docker run -it --rm -v "$(pwd):/app:Z" --device /dev/dri/renderD128:/dev/dri/ren
 
   - **Intel GPU** 
 
-Intel data center GPUs drivers installation guide and download page can be found here : [Get intel dGPU Drivers](https://dgpu-docs.intel.com/driver/installation.html#ubuntu-install-steps).
+Intel data center GPUs drivers installation guide and download page can be found here: [Get intel dGPU Drivers](https://dgpu-docs.intel.com/driver/installation.html#ubuntu-install-steps).
 
 *Note* : for client GPUs *(iGPU & Arc A-Series)*, please refer to the [client iGPU driver installation](https://dgpu-docs.intel.com/driver/client/overview.html).
 
-Once installed, please add user(s) to group: `video`, `render`.
+Once installed, add the user(s) to the `video` and `render` groups.
 
 ```sh
 sudo usermod -aG render <username>
 sudo usermod -aG video <username>
 ```
 
-*Note* : logout/re-login for the changes to take effect.
+*Note*: logout/re-login for the changes to take effect.
 
 Verify installation through `clinfo`:
 
@@ -165,11 +165,11 @@ Platform #0: Intel(R) OpenCL HD Graphics
 - **Nvidia GPU**
 
 In order to target Nvidia GPUs through SYCL, please make sure the CUDA/CUBLAS native requirements *-found [here](README.md#cublas)-* are installed.
-Installation can be verified by running the following :
+Installation can be verified by running the following:
 ```sh
 nvidia-smi
 ```
-Please make sure at least one CUDA device is available, which can be displayed like this *(here an A100-40GB Nvidia GPU)* : 
+Please make sure at least one CUDA device is available, which can be displayed like this *(here an A100-40GB Nvidia GPU)*: 
 ```
 +---------------------------------------------------------------------------------------+
 | NVIDIA-SMI 535.54.03              Driver Version: 535.54.03    CUDA Version: 12.2     |
@@ -189,7 +189,7 @@ Please make sure at least one CUDA device is available, which can be displayed l
 
 - **Base installation**
 
-The base toolkit can be obtained from the official [Intel® oneAPI Base Toolkit ](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit.html) page.
+The base toolkit can be obtained from the official [Intel® oneAPI Base Toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit.html) page.
 
 Please follow the instructions for downloading and installing the Toolkit for Linux, and preferably keep the default installation values unchanged, notably the installation path *(`/opt/intel/oneapi` by default)*.
 
@@ -202,7 +202,7 @@ Upon a successful installation, SYCL is enabled for the available intel devices,
 **oneAPI** : In order to enable SYCL support on Nvidia GPUs, please install the [Codeplay oneAPI Plugin for Nvidia GPUs](https://developer.codeplay.com/products/oneapi/nvidia/download). User should also make sure the plugin version matches the installed base toolkit one *(previous step)* for a seamless "oneAPI on Nvidia GPU" setup.
 
 
-**oneMKL** : The current oneMKL releases *(shipped with the oneAPI base-toolkit)* does not contain the cuBLAS backend. A build from source of the upstream [oneMKL](https://github.com/oneapi-src/oneMKL) with the *cuBLAS* backend enabled is thus required to run it on Nvidia GPUs.
+**oneMKL** : The current oneMKL releases *(shipped with the oneAPI base-toolkit)* do not contain the cuBLAS backend. A build from source of the upstream [oneMKL](https://github.com/oneapi-src/oneMKL) with the *cuBLAS* backend enabled is thus required to run it on Nvidia GPUs.
 
 ```sh
 git clone https://github.com/oneapi-src/oneMKL
@@ -322,7 +322,7 @@ Otherwise, you can run the script :
 
 *Notes :*
 
-- By default, `mmap` is used to read model file. In some cases, it causes runtime hang issues. Please disable it by passing `--no-mmap` to the `/bin/main` if faced with the issue.
+- By default, `mmap` is used to read the model file. In some cases, it causes runtime hang issues. Please disable it by passing `--no-mmap` to the `/bin/main` if faced with the issue.
 
 ## Windows
 
@@ -334,11 +334,11 @@ Intel GPU drivers instructions guide and download page can be found here : [Get 
 
 2. Install Visual Studio
 
-If you already have a recent version of Microsoft Visual Studio, you can skip this tep. Otherwise, please refer to the official download page for [Microsoft Visual Studio](https://visualstudio.microsoft.com/).
+If you already have a recent version of Microsoft Visual Studio, you can skip this step. Otherwise, please refer to the official download page for [Microsoft Visual Studio](https://visualstudio.microsoft.com/).
 
 3. Install Intel® oneAPI Base toolkit
 
-The base toolkit can be obtained from the official [Intel® oneAPI Base Toolkit ](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit.html) page.
+The base toolkit can be obtained from the official [Intel® oneAPI Base Toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit.html) page.
 
 Please follow the instructions for downloading and installing the Toolkit for Windows, and preferably keep the default installation values unchanged, notably the installation path *(`C:\Program Files (x86)\Intel\oneAPI` by default)*.
 
@@ -348,20 +348,20 @@ b. Enable oneAPI running environment:
 
 - Type "oneAPI" in the search bar, then open the `Intel oneAPI command prompt for Intel 64 for Visual Studio 2022` App.
 
-- On the command prompt, enable the runtime environment with the following :
+- On the command prompt, enable the runtime environment with the following:
 ```
 "C:\Program Files (x86)\Intel\oneAPI\setvars.bat" intel64
 ```
 
 c. Verify installation
 
-In the oneAPI command line, run the following to print the available SYCL devices : 
+In the oneAPI command line, run the following to print the available SYCL devices: 
 
 ```
 sycl-ls
 ```
 
-There should be one or more *level-zero* GPU devices displayed as **[ext_oneapi_level_zero:gpu]**. Below is example of such output detecting an *intel Iris Xe* GPU as a Level-zero SYCL device : 
+There should be one or more *level-zero* GPU devices displayed as **[ext_oneapi_level_zero:gpu]**. Below is example of such output detecting an *intel Iris Xe* GPU as a Level-zero SYCL device: 
 
 Output (example):
 ```
@@ -385,7 +385,7 @@ b. Download & install mingw-w64 make for Windows provided by w64devkit
 
 ### II. Build llama.cpp
 
-On the oneAPI command line window, step into the llama.cpp main directory and run the following :
+On the oneAPI command line window, step into the llama.cpp main directory and run the following:
 
 ```
 mkdir -p build
@@ -414,20 +414,20 @@ You can refer to the general [*Prepare and Quantize*](README#prepare-and-quantiz
 
 2. Enable oneAPI running environment
 
-On the oneAPI command line window, run the following and step into the llama.cpp directory : 
+On the oneAPI command line window, run the following and step into the llama.cpp directory: 
 ```
 "C:\Program Files (x86)\Intel\oneAPI\setvars.bat" intel64
 ```
 
 3. List devices information
 
-Similar to the native `sycl-ls`, available SYCL devices can be queried as follow :
+Similar to the native `sycl-ls`, available SYCL devices can be queried as follow:
 
 ```
 build\bin\ls-sycl-device.exe
 ```
 
-The output of this command in a system with 1 *intel CPU* and 1 *intel GPU* would look like the following :
+The output of this command in a system with 1 *intel CPU* and 1 *intel GPU* would look like the following:
 ```
 found 4 SYCL devices:
   Device 0: Intel(R) Arc(TM) A770 Graphics,	compute capability 1.3,
@@ -447,7 +447,7 @@ found 4 SYCL devices:
 
 4. Launch inference
 
-Set device ID=0 with `set GGML_SYCL_DEVICE=0` to target the Level-zero intel GPU and run the main :
+Set device ID=0 with `set GGML_SYCL_DEVICE=0` to target the Level-zero intel GPU and run the main:
 
 ```
 set GGML_SYCL_DEVICE=0
