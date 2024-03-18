@@ -121,7 +121,7 @@ docker run -it --rm -v "$(pwd):/app:Z" --device /dev/dri/renderD128:/dev/dri/ren
 ```
 
 *Notes :*
-- Docker have been tested succefully on native Linux. WSL support has not been verified yet.
+- Docker has been tested successfully on native Linux. WSL support has not been verified yet.
 - You may need to install Intel GPU driver on the **host** machine *(Please refer to the [Linux configuration](#linux) for details)*.
 
 ## Linux
