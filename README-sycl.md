@@ -16,7 +16,7 @@
 
 **SYCL** is a high-level parallel programming model designed to improve developers productivity writing code across various hardware accelerators such as CPUs, GPUs, and FPGAs. It is a single-source language designed for heterogeneous computing and based on standard C++17.
 
-**oneAPI** is an open ecosystem and a standard-based specification, supporting multiple architectures including but not limited to intel CPUs, GPUs and FPGAs. The key components of the oneAPI ecosystem include : 
+**oneAPI** is an open ecosystem and a standard-based specification, supporting multiple architectures including but not limited to intel CPUs, GPUs and FPGAs. The key components of the oneAPI ecosystem include: 
 
 - **DPCPP** *(Data Parallel C++)*: The primary oneAPI SYCL implementation, which includes the icpx/icx Compilers.
 - **oneAPI Libraries**: A set of highly optimized libraries targeting multiple domains *(e.g. oneMKL - Math Kernel Library)*.
@@ -30,9 +30,9 @@ The llama.cpp SYCL backend supports:
 - Intel GPUs.
 - Nvidia GPUs.
 
-*Upcoming support : AMD GPUs*.
+*Upcoming support: AMD GPUs*.
 
-For **Intel CPUs**, it is recommended to the use llama.cpp for [x86](README.md#intel-onemkl) approach.
+When targetting **Intel CPUs**, it is recommended to  use llama.cpp for [x86](README.md#intel-onemkl) approach.
 
 ## News
 
@@ -61,7 +61,7 @@ For **Intel CPUs**, it is recommended to the use llama.cpp for [x86](README.md#i
 
 ### Intel GPUs
 
-The BLAS acceleration oneAPI Math Kernel Library which comes with the oneAPI base-toolkit natively supports intel GPUs. In order to make it "visible" while building/running llama.cpp, simply run the following: 
+The oneAPI Math Kernel Library, which the oneAPI base-toolkit includes, supports intel GPUs. In order to make it "visible", simply run the following:  
 ```sh
 source /opt/intel/oneapi/setvars.sh
 ```
@@ -76,9 +76,9 @@ source /opt/intel/oneapi/setvars.sh
 |Intel built-in Arc GPU| Support| built-in Arc GPU in Meteor Lake|
 |Intel iGPU| Support| iGPU in i5-1250P, i7-1260P, i7-1165G7|
 
-*Notes :*
+*Notes:*
 
-- Device memory can be a limitation when running a large model on an intel GPU. The loaded model size, *`llm_load_tensors : buffer_size`*, is displayed in the log when running `./bin/main`
+- Device memory can be a limitation when running a large model on an intel GPU. The loaded model size, *`llm_load_tensors: buffer_size`*, is displayed in the log when running `./bin/main`
 
 - Please make sure the GPU shared memory from the host is large enough to account for the model's size. For e.g. the *llama-2-7b.Q4_0* requires at least 8.0GB for integrated GPUs and 4.0GB for discrete GPUs.
 
@@ -87,8 +87,6 @@ source /opt/intel/oneapi/setvars.sh
 ### Nvidia GPUs
 The BLAS acceleration on Nvidia GPUs through oneAPI can be obtained using the Nvidia plugins for oneAPI and the cuBLAS backend of the upstream oneMKL library. Details and instructions on how to setup the runtime and library can be found in [this section](#i-setup-environment)
 
-Math Kernel Library which comes with the oneAPI base-toolkit natively supports intel GPUs. In order to make it "visible" while building/running llama.cpp, simply run the following :
-
 - **Tested devices**
 
 |Nvidia GPU| Status | Verified Model|
@@ -96,7 +94,7 @@ Math Kernel Library which comes with the oneAPI base-toolkit natively supports i
 |Ampere Series| Support| A100, A4000|
 |Ampere Series *(Mobile)*| Support| RTX 40 Series
 
-*Notes :* 
+*Notes:* 
   - Support for Nvidia targets through oneAPI is currently limited to Linux platforms.
 
   - Please make sure the native oneAPI MKL *(dedicated to intel CPUs and GPUs)* is not "visible" at this stage to properly setup and use the built-from-source oneMKL with cuBLAS backend in llama.cpp for Nvidia GPUs. 
@@ -109,7 +107,7 @@ The docker build option is currently limited to *intel GPU* targets.
 docker build -t llama-cpp-sycl --build-arg="LLAMA_SYCL_F16=[OFF|ON]" -f .devops/main-intel.Dockerfile .
 ```
 
-*Note* : you can also use the `.devops/server-intel.Dockerfile`, which builds the *"server"* alternative.
+*Note*: you can also use the `.devops/server-intel.Dockerfile`, which builds the *"server"* alternative.
 
 ### Run container
 
@@ -134,7 +132,7 @@ docker run -it --rm -v "$(pwd):/app:Z" --device /dev/dri/renderD128:/dev/dri/ren
 
 Intel data center GPUs drivers installation guide and download page can be found here: [Get intel dGPU Drivers](https://dgpu-docs.intel.com/driver/installation.html#ubuntu-install-steps).
 
-*Note* : for client GPUs *(iGPU & Arc A-Series)*, please refer to the [client iGPU driver installation](https://dgpu-docs.intel.com/driver/client/overview.html).
+*Note*: for client GPUs *(iGPU & Arc A-Series)*, please refer to the [client iGPU driver installation](https://dgpu-docs.intel.com/driver/client/overview.html).
 
 Once installed, add the user(s) to the `video` and `render` groups.
 
@@ -199,10 +197,10 @@ Upon a successful installation, SYCL is enabled for the available intel devices,
 
 - **Adding support to Nvidia GPUs**
 
-**oneAPI** : In order to enable SYCL support on Nvidia GPUs, please install the [Codeplay oneAPI Plugin for Nvidia GPUs](https://developer.codeplay.com/products/oneapi/nvidia/download). User should also make sure the plugin version matches the installed base toolkit one *(previous step)* for a seamless "oneAPI on Nvidia GPU" setup.
+**oneAPI**: In order to enable SYCL support on Nvidia GPUs, please install the [Codeplay oneAPI Plugin for Nvidia GPUs](https://developer.codeplay.com/products/oneapi/nvidia/download). User should also make sure the plugin version matches the installed base toolkit one *(previous step)* for a seamless "oneAPI on Nvidia GPU" setup.
 
 
-**oneMKL** : The current oneMKL releases *(shipped with the oneAPI base-toolkit)* do not contain the cuBLAS backend. A build from source of the upstream [oneMKL](https://github.com/oneapi-src/oneMKL) with the *cuBLAS* backend enabled is thus required to run it on Nvidia GPUs.
+**oneMKL**: The current oneMKL releases *(shipped with the oneAPI base-toolkit)* do not contain the cuBLAS backend. A build from source of the upstream [oneMKL](https://github.com/oneapi-src/oneMKL) with the *cuBLAS* backend enabled is thus required to run it on Nvidia GPUs.
 
 ```sh
 git clone https://github.com/oneapi-src/oneMKL
@@ -223,7 +221,7 @@ sycl-ls
 
 - **Intel GPU**
 
-When targeting an intel GPU, the user should expect one or more level-zero devices among the available SYCL devices. Please make sure that at least one GPU is present, for instance [`ext_oneapi_level_zero:gpu:0`] in the sample output below :
+When targeting an intel GPU, the user should expect one or more level-zero devices among the available SYCL devices. Please make sure that at least one GPU is present, for instance [`ext_oneapi_level_zero:gpu:0`] in the sample output below:
 
 ```
 [opencl:acc:0] Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device OpenCL 1.2  [2023.16.10.0.17_160000]
@@ -234,7 +232,7 @@ When targeting an intel GPU, the user should expect one or more level-zero devic
 
 - **Nvidia GPU** 
 
-Similarly, user targetting Nvidia GPUs should expect at least one SYCL-CUDA device [`ext_oneapi_cuda:gpu`] as bellow : 
+Similarly, user targetting Nvidia GPUs should expect at least one SYCL-CUDA device [`ext_oneapi_cuda:gpu`] as bellow: 
 ```
 [opencl:acc:0] Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device OpenCL 1.2  [2023.16.12.0.12_195853.xmain-hotfix]
 [opencl:cpu:1] Intel(R) OpenCL, Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz OpenCL 3.0 (Build 0) [2023.16.12.0.12_195853.xmain-hotfix]
@@ -266,7 +264,7 @@ mkdir -p build && cd build
 cmake .. -DLLAMA_SYCL=ON -DLLAMA_SYCL_TARGET=NVIDIA -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=icpx
 ```
 
-*Notes :*
+*Notes:*
 - The **F32** build is enabled by default, but the **F16** yields better performance for long-prompt inference.
 
 ### III. Run the inference
@@ -283,12 +281,12 @@ source /opt/intel/oneapi/setvars.sh
 
 3. List devices information
 
-Similar to the native `sycl-ls`, available SYCL devices can be queried as follow : 
+Similar to the native `sycl-ls`, available SYCL devices can be queried as follow: 
 
 ```sh
 ./build/bin/ls-sycl-device
 ```
-A example of such log in a system with 1 *intel CPU* and 1 *intel GPU* can look like the following :
+A example of such log in a system with 1 *intel CPU* and 1 *intel GPU* can look like the following:
 ```
 found 4 SYCL devices:
   Device 0: Intel(R) Arc(TM) A770 Graphics,	compute capability 1.3,
@@ -314,13 +312,13 @@ For instance, in order to target the SYCL device with *ID*=0 *(log from previous
 GGML_SYCL_DEVICE=0 ./build/bin/main -m models/llama-2-7b.Q4_0.gguf -p "Building a website can be done in 10 simple steps:" -n 400 -e -ngl 33
 ```
 
-Otherwise, you can run the script :
+Otherwise, you can run the script:
 
 ```sh
 ./examples/sycl/run_llama2.sh
 ```
 
-*Notes :*
+*Notes:*
 
 - By default, `mmap` is used to read the model file. In some cases, it causes runtime hang issues. Please disable it by passing `--no-mmap` to the `/bin/main` if faced with the issue.
 
@@ -330,7 +328,7 @@ Otherwise, you can run the script :
 
 1. Install GPU driver
 
-Intel GPU drivers instructions guide and download page can be found here : [Get intel GPU Drivers](https://www.intel.com/content/www/us/en/products/docs/discrete-gpus/arc/software/drivers.html).
+Intel GPU drivers instructions guide and download page can be found here: [Get intel GPU Drivers](https://www.intel.com/content/www/us/en/products/docs/discrete-gpus/arc/software/drivers.html).
 
 2. Install Visual Studio
 
@@ -397,12 +395,12 @@ cmake -G "MinGW Makefiles" ..  -DLLAMA_SYCL=ON -DCMAKE_C_COMPILER=icx -DCMAKE_CX
 make
 ```
 
-Otherwise, run the `win-build-sycl.bat` wrapper which encapsulates the former instructions : 
+Otherwise, run the `win-build-sycl.bat` wrapper which encapsulates the former instructions: 
 ```sh
 .\examples\sycl\win-build-sycl.bat
 ```
 
-*Notes :*
+*Notes:*
 
 - By default, calling `make` will build all target binary files. In case of a minimal experimental setup, the user can build the inference executable only through `make main`.
 
@@ -490,7 +488,7 @@ Note:
 
   llama.cpp uses *mmap* as the default mode for reading the model file and copying it to the GPU. In some systems, `memcpy` might behave abnormally and therefore hang.
 
-  - **Solution** : add `--no-mmap` or `--mmap 0` flag to the `main` executable.
+  - **Solution**: add `--no-mmap` or `--mmap 0` flag to the `main` executable.
 
 - `Split-mode:[row]` is not supported.
 
@@ -498,8 +496,8 @@ Note:
 
 - Error:  `error while loading shared libraries: libsycl.so.7: cannot open shared object file: No such file or directory`.
 
-  - Potential cause : Unavailable oneAPI installation or invisible ENV variables.
-  - Solution : Install *oneAPI base toolkit* and enable its ENV through: `source /opt/intel/oneapi/setvars.sh`.
+  - Potential cause: Unavailable oneAPI installation or not set ENV variables.
+  - Solution: Install *oneAPI base toolkit* and enable its ENV through: `source /opt/intel/oneapi/setvars.sh`.
 
 - General compiler error: 
 
