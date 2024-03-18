@@ -199,7 +199,7 @@ Upon a successful installation, SYCL is enabled for the available intel devices,
 
 - **Adding support to Nvidia GPUs**
 
-**oneAPI** : In order to enable SYCL support on Nvidia GPUs through oneAPI, please install the [Codeplay oneAPI Plugin for Nvidia GPUs](https://developer.codeplay.com/products/oneapi/nvidia/download). User should also make sure the plugin version matches the installed base toolkit one *(previous step)* for a seamless "oneAPI on Nvidia GPU" setup.
+**oneAPI** : In order to enable SYCL support on Nvidia GPUs, please install the [Codeplay oneAPI Plugin for Nvidia GPUs](https://developer.codeplay.com/products/oneapi/nvidia/download). User should also make sure the plugin version matches the installed base toolkit one *(previous step)* for a seamless "oneAPI on Nvidia GPU" setup.
 
 
 **oneMKL** : The current oneMKL releases *(shipped with the oneAPI base-toolkit)* does not contain the cuBLAS backend. A build from source of the upstream [oneMKL](https://github.com/oneapi-src/oneMKL) with the *cuBLAS* backend enabled is thus required to run it on Nvidia GPUs.
