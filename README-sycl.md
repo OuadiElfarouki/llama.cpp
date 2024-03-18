@@ -501,7 +501,7 @@ Note:
   - Potential cause : Unavailable oneAPI installation or invisible ENV variables.
   - Solution : Install *oneAPI base toolkit* and enable its ENV through: `source /opt/intel/oneapi/setvars.sh`.
 
-- General compiler error : 
+- General compiler error: 
 
   - Remove build folder or try a clean-build.
 
