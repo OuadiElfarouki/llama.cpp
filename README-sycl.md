@@ -461,7 +461,7 @@ Otherwise, run the following wrapper script:
 
 Note:
 
-- By default, `mmap` is used to read model file. In some cases, it causes runtime hang issues. Please disable it by passing `--no-mmap` to the `main.exe` if faced with the issue.
+- By default, `mmap` is used to read the model file. In some cases, it causes runtime hang issues. Please disable it by passing `--no-mmap` to the `main.exe` if faced with the issue.
 
 
 ## Environment Variables
