@@ -7992,16 +7992,15 @@ static void mul_mat_vec_q(const void * __restrict__ vx, const void * __restrict_
     const block_q_t  * x = (const block_q_t  *) vx;
     const block_q8_1 * y = (const block_q8_1 *) vy;
 
+    const int iqs =
+            vdr *
+            (item_ct1.get_local_id(2) % qi_vdr); // x block quant index when casting the quants to int
+
     for (int i = item_ct1.get_local_id(2) / qi_vdr; i < blocks_per_row;
          i += blocks_per_warp) {
       const int ibx = row * blocks_per_row + i; // x block index
 
       const int iby = i * (qk / QK8_1); // y block index that aligns with ibx
-
-      const int iqs =
-          vdr *
-          (item_ct1.get_local_id(2) -
-           i * qi_vdr); // x block quant index when casting the quants to int
 
       tmp += vec_dot_q_sycl(&x[ibx], &y[iby], iqs);
     }
@@ -15194,6 +15193,13 @@ static void ggml_sycl_mul_mat(const ggml_tensor * src0, const ggml_tensor * src1
         }
     }
 
+    printf("src0: %8d %8d %8d %8d\n", src0->ne[0], src0->ne[1], src0->ne[2], src0->ne[3]);
+    printf("      %8d %8d %8d %8d\n", src0->nb[0], src0->nb[1], src0->nb[2], src0->nb[3]);
+    printf("src1: %8d %8d %8d %8d\n", src1->ne[0], src1->ne[1], src1->ne[2], src1->ne[3]);
+    printf("      %8d %8d %8d %8d\n", src1->nb[0], src1->nb[1], src1->nb[2], src1->nb[3]);
+    printf("src0 is contiguous %d, transposed %d, type = %s, name = %s\n", ggml_is_contiguous(src0), ggml_is_transposed(src0), ggml_type_name(src0->type), src0->name);
+    printf("src1 is contiguous %d, transposed %d, type = %s, name = %s\n", ggml_is_contiguous(src1), ggml_is_transposed(src1), ggml_type_name(src1->type), src1->name);
+
     // check data types and tensor shapes for custom matrix multiplication kernels:
     bool use_dequantize_mul_mat_vec = ggml_sycl_supports_dmmv(src0->type)
         && src1->type == GGML_TYPE_F32 && dst->type == GGML_TYPE_F32
@@ -15215,20 +15221,27 @@ static void ggml_sycl_mul_mat(const ggml_tensor * src0, const ggml_tensor * src1
 
     if (!split && src0->type == GGML_TYPE_F16 && ggml_is_permuted(src0) && ggml_is_permuted(src1) && src1->ne[1] == 1) {
         // KQ single-batch
+        printf("ggml_sycl_mul_mat_vec_p021\n");
         ggml_sycl_mul_mat_vec_p021(src0, src1, dst);
     } else if (!split && src0->type == GGML_TYPE_F16 && !ggml_is_contiguous(src0) && !ggml_is_transposed(src1) && src1->ne[1] == 1) {
         // KQV single-batch
+        printf("ggml_sycl_mul_mat_vec_nc\n");
         ggml_sycl_mul_mat_vec_nc(src0, src1, dst);
     } else if (!split && src0->type == GGML_TYPE_F16 && (src1->type == GGML_TYPE_F16) && !ggml_is_transposed(src0) && !ggml_is_transposed(src1) && src1->ne[2]*src1->ne[3] > 1) {
         // KQ + KQV multi-batch
+        printf("ggml_sycl_mul_mat_batched_sycl\n");
         ggml_sycl_mul_mat_batched_sycl(src0, src1, dst);
     } else if (use_dequantize_mul_mat_vec) {
+        printf("ggml_sycl_op_mul_mat + dequantize_mul_mat_vec\n");
         ggml_sycl_op_mul_mat(src0, src1, dst, ggml_sycl_op_dequantize_mul_mat_vec, false);
     } else if (use_mul_mat_vec_q) {
+        printf("ggml_sycl_op_mul_mat + mul_mat_vec_q\n");
         ggml_sycl_op_mul_mat(src0, src1, dst, ggml_sycl_op_mul_mat_vec_q, true);
     } else if (use_mul_mat_q) {
+        printf("ggml_sycl_op_mul_mat + mul_mat_q\n");
         ggml_sycl_op_mul_mat(src0, src1, dst, ggml_sycl_op_mul_mat_q, true);
     } else {
+        printf("ggml_sycl_op_mul_mat + mul_mat_sycl\n");
         ggml_sycl_op_mul_mat(src0, src1, dst, ggml_sycl_op_mul_mat_sycl, false);
     }
 }
@@ -16010,6 +16023,7 @@ bool ggml_sycl_compute_forward(struct ggml_compute_params * params, struct ggml_
         }
     }
 
+    printf("==== OP : %d\n", int(tensor->op));
     switch (tensor->op) {
         case GGML_OP_REPEAT:
             func = ggml_sycl_repeat;
