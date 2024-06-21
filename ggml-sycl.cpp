@@ -973,7 +973,7 @@ namespace dpct
             if (backend == "ext_oneapi_hip:gpu") return 3;
             if (backend == "opencl:cpu") return 4;
             if (backend == "opencl:acc") return 5;
-            printf("convert_backend_index: can't handle backend=%s\n", backend.c_str());
+            // // printf("convert_backend_index: can't handle backend=%s\n", backend.c_str());
             GGML_ASSERT(false);
         }
         static bool compare_backend(std::string &backend1, std::string &backend2) {
@@ -3345,7 +3345,7 @@ class sycl_gpu_mgr {
                 if (gpus[i] == id)
                     return i;
             }
-            printf("miss to get device index by id=%d\n", id);
+            // // printf("miss to get device index by id=%d\n", id);
             GGML_ASSERT(false);
         }
 
@@ -3474,12 +3474,12 @@ inline dpct::err0 ggml_sycl_set_device(const int device) try {
 void log_ggml_var_device(const char*name, float *src, size_t total_elements, bool src_on_device){
     if(!g_ggml_sycl_debug) return;
     if(!src){
-        printf("GGML Tensor:%s skip to save for NULL pointer\n", name);
+        // // printf("GGML Tensor:%s skip to save for NULL pointer\n", name);
         return;
     }
     char filename[1024];
     sprintf(filename, "%s.txt", name);
-    printf("GGML Tensor:%s save to %s\n", name, filename);
+    // // printf("GGML Tensor:%s save to %s\n", name, filename);
 
     size_t total_size = total_elements*sizeof(float);
     float *local_buf = NULL;
@@ -3508,12 +3508,12 @@ void log_ggml_var_device(const char*name, float *src, size_t total_elements, boo
 void log_ggml_var_device_fp16(const char*name, sycl::half *src, size_t total_elements, bool src_on_device){
     if(!g_ggml_sycl_debug) return;
     if(!src){
-        printf("GGML Tensor:%s skip to save for NULL pointer\n", name);
+        // // printf("GGML Tensor:%s skip to save for NULL pointer\n", name);
         return;
     }
     char filename[1024];
     sprintf(filename, "%s.txt", name);
-    printf("GGML Tensor:%s save to %s\n", name, filename);
+    // // printf("GGML Tensor:%s save to %s\n", name, filename);
 
     size_t total_size = total_elements*sizeof(sycl::half);
     sycl::half *local_buf = NULL;
@@ -3543,7 +3543,7 @@ void log_ggml_var_device_fp16(const char*name, sycl::half *src, size_t total_ele
 void print_ggml_tensor(const char*name, struct ggml_tensor *src){
     if(!g_ggml_sycl_debug) return;
     if(!src){
-        printf("GGML Tensor:%s skip to save for NULL pointer\n", name);
+        // // printf("GGML Tensor:%s skip to save for NULL pointer\n", name);
         return;
     }
 
@@ -9740,7 +9740,7 @@ static void rms_norm_f32_sycl(const float *x, float *dst, const int ncols,
                               const int nrows, const float eps,
                               dpct::queue_ptr stream) {
     GGML_ASSERT(ncols % WARP_SIZE == 0);
-    // printf("%s ncols=%d, nrows=%d, WARP_SIZE=%d\n", __func__, ncols, nrows, WARP_SIZE);
+    // // printf("%s ncols=%d, nrows=%d, WARP_SIZE=%d\n", __func__, ncols, nrows, WARP_SIZE);
     if (ncols < 1024) {
         const sycl::range<3> block_dims(1, 1, WARP_SIZE);
         stream->submit([&](sycl::handler &cgh) {
@@ -12813,7 +12813,7 @@ catch (sycl::exception const &exc) {
 static void ggml_sycl_pool_free_vmm(int device_index, void *ptr, size_t size) try {
     scoped_spin_lock lock(g_sycl_pool_lock);
 #ifdef DEBUG_SYCL_MALLOC
-    printf("sycl pool[%d]: freed %llu bytes at %llx\n", device_index, (unsigned long long) size, ptr);
+    // // printf("sycl pool[%d]: freed %llu bytes at %llx\n", device_index, (unsigned long long) size, ptr);
 #endif
 
     g_sycl_pool_used[device_index] -= size;
@@ -13808,6 +13808,7 @@ inline void ggml_sycl_op_dequantize_mul_mat_vec(
         src0->type == GGML_TYPE_Q8_0 || src0->type == GGML_TYPE_F16;
 
     if (src1_convert_f16) {
+        // // printf("Convertion src1 needed to fp16");
         src1_dfloat = src1_dfloat_a.alloc(ne00);
         const to_fp16_sycl_t to_fp16_sycl = ggml_get_to_fp16_sycl(src1->type);
         GGML_ASSERT(to_fp16_sycl != nullptr);
@@ -13852,7 +13853,7 @@ inline void ggml_sycl_op_dequantize_mul_mat_vec(
             convert_mul_mat_vec_f16_sycl(src0_dd_i, src1_dfloat, dst_dd_i, ne00, row_diff, stream);
             break;
         default:
-            printf("ggml_sycl_op_dequantize_mul_mat_vec unsupported GGML_TYPE %d\n", src0->type);
+            // // printf("ggml_sycl_op_dequantize_mul_mat_vec unsupported GGML_TYPE %d\n", src0->type);
             GGML_ASSERT(false);
             break;
     }
@@ -13877,6 +13878,7 @@ inline void ggml_sycl_op_mul_mat_sycl(
 
     const int64_t ne00 = src0->ne[0];
     const int64_t ne10 = src1->ne[0];
+    // // printf("ggml_sycl_op_mul_mat_sycl dst: %8d %8d %8d %8d\n", dst->ne[0], dst->ne[1], dst->ne[2], dst->ne[3]);
 
     const int64_t ne0 = dst->ne[0];
 
@@ -13899,9 +13901,10 @@ inline void ggml_sycl_op_mul_mat_sycl(
         use_fp16 && ggml_is_contiguous(src0) && row_diff == src0->ne[1] &&
         dst->op_params[0] == GGML_PREC_DEFAULT) {
 
-        // GGML_SYCL_DEBUG("ggml_sycl_op_mul_mat_sycl - fp16 path\n");
+        // // printf("ggml_sycl_op_mul_mat_sycl - fp16 path\n");
         sycl_pool_alloc<sycl::half> src0_as_f16;
         if (src0->type != GGML_TYPE_F16) {
+            // // printf("Convertion src0 needed to fp16\n");
             const to_fp16_sycl_t to_fp16_sycl = ggml_get_to_fp16_sycl(src0->type);
             GGML_ASSERT(to_fp16_sycl != nullptr);
             size_t ne = row_diff*ne00;
@@ -13914,6 +13917,7 @@ inline void ggml_sycl_op_mul_mat_sycl(
 
         sycl_pool_alloc<sycl::half> src1_as_f16;
         if (src1->type != GGML_TYPE_F16) {
+            // // printf("Convertion src1 needed to fp16\n");
             const to_fp16_sycl_t to_fp16_sycl = ggml_get_to_fp16_sycl(src1->type);
             GGML_ASSERT(to_fp16_sycl != nullptr);
             size_t ne = src1_ncols*ne10;
@@ -13927,6 +13931,7 @@ inline void ggml_sycl_op_mul_mat_sycl(
 
         const sycl::half alpha_f16 = 1.0f;
         const sycl::half beta_f16 = 0.0f;
+        // // printf("m = %8d n = %8d k = %8d \n lda = %8d ldb = %8d ldc = %8d\n",row_diff,src1_ncols, ne10, ne00, ne10,ldc);
         SYCL_CHECK(CHECK_TRY_ERROR(g_sycl_handles[id] = stream));
         SYCL_CHECK(CHECK_TRY_ERROR(dpct::gemm(
             *g_sycl_handles[id], oneapi::mkl::transpose::trans,
@@ -13938,18 +13943,21 @@ inline void ggml_sycl_op_mul_mat_sycl(
         g_sycl_handles[id]->wait();
         const to_fp32_sycl_t to_fp32_sycl = ggml_get_to_fp32_sycl(GGML_TYPE_F16);
         to_fp32_sycl(dst_f16.get(), dst_dd_i, row_diff*src1_ncols, stream);
+        // // printf("after op_mul_mat_sycl dst: %8d %8d %8d %8d\n", dst->ne[0], dst->ne[1], dst->ne[2], dst->ne[3]);
     }
     else {
-        // GGML_SYCL_DEBUG("ggml_sycl_op_mul_mat_sycl - fp32 path\n");
+        // // printf("ggml_sycl_op_mul_mat_sycl - fp32 path\n");
         sycl_pool_alloc<float> src0_ddq_as_f32;
         sycl_pool_alloc<float> src1_ddq_as_f32;
         if (src0->type != GGML_TYPE_F32) {
+            // // printf("Convertion src0 needed to fp32\n");
             const to_fp32_sycl_t to_fp32_sycl = ggml_get_to_fp32_sycl(src0->type);
             GGML_ASSERT(to_fp32_sycl != nullptr);
             src0_ddq_as_f32.alloc(row_diff*ne00);
             to_fp32_sycl(src0_dd_i, src0_ddq_as_f32.get(), row_diff*ne00, stream);
         }
         if (src1->type != GGML_TYPE_F32) {
+            // // printf("Convertion src1 needed to fp32\n");
             const to_fp32_sycl_t to_fp32_sycl = ggml_get_to_fp32_sycl(src1->type);
             GGML_ASSERT(to_fp32_sycl != nullptr);
             src1_ddq_as_f32.alloc(src1_ncols*ne10);
@@ -14351,7 +14359,7 @@ static void ggml_sycl_op_flatten(const ggml_tensor *src0,
         SYCL_CHECK(CHECK_TRY_ERROR(
             dpct::get_current_device().queues_wait_and_throw()));
     }
-    // print_ggml_tensor("tensor", dst);
+    print_ggml_tensor("ROPE tensor", dst);
 }
 catch (sycl::exception const &exc) {
 
@@ -14633,6 +14641,7 @@ static void ggml_sycl_op_mul_mat(const ggml_tensor *src0,
                         }
                     }
                 } else if (src1->backend == GGML_BACKEND_TYPE_CPU || (src1_on_device && !src1_is_contiguous)) {
+                    // printf("copied tensor2d 1\n");
                     SYCL_CHECK(ggml_sycl_cpy_tensor_2d(
                                    src1_ddf_i, src1, i03, i02, src1_col_0, src1_col_0+src1_ncols, stream));
                 } else {
@@ -14650,6 +14659,7 @@ static void ggml_sycl_op_mul_mat(const ggml_tensor *src0,
                 }
 
                 if (src1_col_0 == 0 && (!src0_on_device || !src0_is_contiguous) && i02 % i02_divisor == 0) {
+                    // printf("copied tensor2d 2\n");
                     SYCL_CHECK(ggml_sycl_cpy_tensor_2d(src0_dd_i, src0, i03, i02/i02_divisor, dev[i].row_low, dev[i].row_high, stream));
                 }
                 if (src1->type == GGML_TYPE_F16) {
@@ -15203,12 +15213,12 @@ static void ggml_sycl_mul_mat(const ggml_tensor * src0, const ggml_tensor * src1
         }
     }
 
-    printf("src0: %8d %8d %8d %8d\n", src0->ne[0], src0->ne[1], src0->ne[2], src0->ne[3]);
-    printf("      %8d %8d %8d %8d\n", src0->nb[0], src0->nb[1], src0->nb[2], src0->nb[3]);
-    printf("src1: %8d %8d %8d %8d\n", src1->ne[0], src1->ne[1], src1->ne[2], src1->ne[3]);
-    printf("      %8d %8d %8d %8d\n", src1->nb[0], src1->nb[1], src1->nb[2], src1->nb[3]);
-    printf("src0 is contiguous %d, transposed %d, type = %s, name = %s\n", ggml_is_contiguous(src0), ggml_is_transposed(src0), ggml_type_name(src0->type), src0->name);
-    printf("src1 is contiguous %d, transposed %d, type = %s, name = %s\n", ggml_is_contiguous(src1), ggml_is_transposed(src1), ggml_type_name(src1->type), src1->name);
+    // printf("src0: %8d %8d %8d %8d\n", src0->ne[0], src0->ne[1], src0->ne[2], src0->ne[3]);
+    // // printf("      %8d %8d %8d %8d\n", src0->nb[0], src0->nb[1], src0->nb[2], src0->nb[3]);
+    // printf("src1: %8d %8d %8d %8d\n", src1->ne[0], src1->ne[1], src1->ne[2], src1->ne[3]);
+    // // printf("      %8d %8d %8d %8d\n", src1->nb[0], src1->nb[1], src1->nb[2], src1->nb[3]);
+    // printf("src0 is contiguous %d, transposed %d, type = %s, name = %s\n", ggml_is_contiguous(src0), ggml_is_transposed(src0), ggml_type_name(src0->type), src0->name);
+    // printf("src1 is contiguous %d, transposed %d, type = %s, name = %s\n", ggml_is_contiguous(src1), ggml_is_transposed(src1), ggml_type_name(src1->type), src1->name);
 
     // check data types and tensor shapes for custom matrix multiplication kernels:
     bool use_dequantize_mul_mat_vec = ggml_sycl_supports_dmmv(src0->type)
@@ -15231,28 +15241,34 @@ static void ggml_sycl_mul_mat(const ggml_tensor * src0, const ggml_tensor * src1
 
     if (!split && src0->type == GGML_TYPE_F16 && ggml_is_permuted(src0) && ggml_is_permuted(src1) && src1->ne[1] == 1) {
         // KQ single-batch
-        printf("ggml_sycl_mul_mat_vec_p021\n");
+        // printf("ggml_sycl_mul_mat_vec_p021\n");
         ggml_sycl_mul_mat_vec_p021(src0, src1, dst);
     } else if (!split && src0->type == GGML_TYPE_F16 && !ggml_is_contiguous(src0) && !ggml_is_transposed(src1) && src1->ne[1] == 1) {
         // KQV single-batch
-        printf("ggml_sycl_mul_mat_vec_nc\n");
+        // printf("ggml_sycl_mul_mat_vec_nc\n");
         ggml_sycl_mul_mat_vec_nc(src0, src1, dst);
     } else if (!split && src0->type == GGML_TYPE_F16 && (src1->type == GGML_TYPE_F16) && !ggml_is_transposed(src0) && !ggml_is_transposed(src1) && src1->ne[2]*src1->ne[3] > 1) {
         // KQ + KQV multi-batch
-        printf("ggml_sycl_mul_mat_batched_sycl\n");
+        // printf("ggml_sycl_mul_mat_batched_sycl\n");
         ggml_sycl_mul_mat_batched_sycl(src0, src1, dst);
     } else if (use_dequantize_mul_mat_vec) {
-        printf("ggml_sycl_op_mul_mat + dequantize_mul_mat_vec\n");
+        // printf("ggml_sycl_op_mul_mat + dequantize_mul_mat_vec\n");
         ggml_sycl_op_mul_mat(src0, src1, dst, ggml_sycl_op_dequantize_mul_mat_vec, false);
     } else if (use_mul_mat_vec_q) {
-        printf("ggml_sycl_op_mul_mat + mul_mat_vec_q\n");
+        // printf("ggml_sycl_op_mul_mat + mul_mat_vec_q\n");
         ggml_sycl_op_mul_mat(src0, src1, dst, ggml_sycl_op_mul_mat_vec_q, true);
     } else if (use_mul_mat_q) {
-        printf("ggml_sycl_op_mul_mat + mul_mat_q\n");
+        // printf("ggml_sycl_op_mul_mat + mul_mat_q\n");
         ggml_sycl_op_mul_mat(src0, src1, dst, ggml_sycl_op_mul_mat_q, true);
     } else {
-        printf("ggml_sycl_op_mul_mat + mul_mat_sycl\n");
+        if(!split && src0->type == GGML_TYPE_F16 && !ggml_is_transposed(src0) && !ggml_is_transposed(src1) && src1->ne[2]*src1->ne[3] > 1){
+        ggml_sycl_mul_mat_batched_sycl(src0, src1, dst);
+        }
+        else{
+        // printf("ggml_sycl_op_mul_mat + mul_mat_sycl\n");
         ggml_sycl_op_mul_mat(src0, src1, dst, ggml_sycl_op_mul_mat_sycl, false);
+
+        }        
     }
 }
 
@@ -15767,6 +15783,8 @@ static void ggml_sycl_soft_max(const ggml_tensor * src0, const ggml_tensor * src
 
 static void ggml_sycl_rope(const ggml_tensor * src0, const ggml_tensor * src1, ggml_tensor * dst) {
     GGML_ASSERT(ggml_is_contiguous(src0)); // TODO: this restriction is temporary until non-cont support is implemented
+    // printf("ROPE src0: %8d %8d %8d %8d\n", src0->ne[0], src0->ne[1], src0->ne[2], src0->ne[3]);
+    // printf("ROPE src1: %8d %8d %8d %8d\n", src1->ne[0], src1->ne[1], src1->ne[2], src1->ne[3]);
     ggml_sycl_op_flatten(src0, src1, dst, ggml_sycl_op_rope);
 }
 
@@ -16033,7 +16051,7 @@ bool ggml_sycl_compute_forward(struct ggml_compute_params * params, struct ggml_
         }
     }
 
-    printf("==== OP : %d\n", int(tensor->op));
+    // printf("==== OP : %d\n", int(tensor->op));
     switch (tensor->op) {
         case GGML_OP_REPEAT:
             func = ggml_sycl_repeat;
