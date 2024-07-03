@@ -671,17 +671,17 @@ namespace dpct
 #endif
       }
 
-      void get_device_info(device_info &out) const {
-        dpct::get_device_info(out, *this);
-      }
-
       const device_info& get_device_info() const {
         std::lock_guard<std::mutex> lock(m_mutex);
-        if (!_cached_device_info) {
-            _cached_device_info = device_info{};
-            dpct::get_device_info(*_cached_device_info, *this);
+        if (!_dev_info) {
+            _dev_info = device_info{};
+            dpct::get_device_info(*_dev_info, *this);
         }
-        return *_cached_device_info;
+        return *_dev_info;
+      }
+
+      void get_device_info(device_info &out) const {
+        out = this->get_device_info();
       }
 
       void reset() {
@@ -804,7 +804,7 @@ namespace dpct
       sycl::queue _saved_queue;
       std::vector<sycl::queue> _queues;
       mutable mutex_type m_mutex;
-      mutable std::optional<device_info> _cached_device_info;
+      mutable std::optional<device_info> _dev_info;
     };
 
 
@@ -887,7 +887,6 @@ namespace dpct
             return d_m;
         }
 
-        // optional ?
         int get_work_group_size(unsigned int id) const {
             std::lock_guard<std::recursive_mutex> lock(m_mutex);
             check_id(id);
