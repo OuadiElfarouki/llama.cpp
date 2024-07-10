@@ -3669,17 +3669,17 @@ static void ggml_sycl_mul_mat(ggml_backend_sycl_context & ctx, const ggml_tensor
     if (ctx.stream()->get_backend() == sycl::backend::ext_oneapi_cuda)
         use_dequantize_mul_mat_vec = use_dequantize_mul_mat_vec && !use_mul_mat_vec_q;
 
-    if (!split && src0->type == GGML_TYPE_F16 && ggml_is_permuted(src0) && ggml_is_permuted(src1) && src1->ne[1] == 1) {
-        // KQ single-batch
-        // printf("ggml_sycl_mul_mat_vec_p021\n");
-        ggml_sycl_mul_mat_vec_p021(ctx, src0, src1, dst);
-    } else if (!split && src0->type == GGML_TYPE_F16 && src1->type == GGML_TYPE_F32 && !ggml_is_transposed(src1) && src1->ne[1] == 1) {
-        // KQV single-batch
-        // printf("ggml_sycl_mul_mat_vec_nc\n");
-        ggml_sycl_mul_mat_vec_nc(ctx, src0, src1, dst);
-    } else if (!split && src0->type == GGML_TYPE_F16 && !ggml_is_transposed(src0) && !ggml_is_transposed(src1) && src1->ne[2]*src1->ne[3] > 1) {
+    // if (!split && src0->type == GGML_TYPE_F16 && ggml_is_permuted(src0) && ggml_is_permuted(src1) && src1->ne[1] == 1) {
+    //     // KQ single-batch
+    //     printf("ggml_sycl_mul_mat_vec_p021\n");
+    //     ggml_sycl_mul_mat_vec_p021(ctx, src0, src1, dst);
+    // } else if (!split && src0->type == GGML_TYPE_F16 && src1->type == GGML_TYPE_F32 && !ggml_is_transposed(src1) && src1->ne[1] == 1) {
+    //     // KQV single-batch
+    //     printf("ggml_sycl_mul_mat_vec_nc\n");
+    //     ggml_sycl_mul_mat_vec_nc(ctx, src0, src1, dst);
+    // } else 
+    if (!split && src0->type == GGML_TYPE_F16 && !ggml_is_transposed(src0) && !ggml_is_transposed(src1) && src1->ne[2]*src1->ne[3] > 1) {
         // KQ + KQV multi-batch
-        // all following don't suppose ggml_is_contiguous(src0)==false anymore, make sure it is valid
         // printf("ggml_sycl_mul_mat_batched_sycl\n");
         ggml_sycl_mul_mat_batched_sycl(ctx, src0, src1, dst);
     } else if (use_dequantize_mul_mat_vec) {
