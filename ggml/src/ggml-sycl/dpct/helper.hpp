@@ -671,14 +671,17 @@ namespace dpct
 #endif
       }
 
-      void get_device_info(device_info &out) const {
-        dpct::get_device_info(out, *this);
+      const device_info& get_device_info() const {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        if (!_dev_info) {
+            _dev_info = device_info{};
+            dpct::get_device_info(*_dev_info, *this);
+        }
+        return *_dev_info;
       }
 
-      device_info get_device_info() const {
-        device_info prop;
-        dpct::get_device_info(prop, *this);
-        return prop;
+      void get_device_info(device_info &out) const {
+        out = this->get_device_info();
       }
 
       void reset() {
@@ -801,6 +804,7 @@ namespace dpct
       sycl::queue _saved_queue;
       std::vector<sycl::queue> _queues;
       mutable mutex_type m_mutex;
+      mutable std::optional<device_info> _dev_info;
     };
 
 
@@ -852,7 +856,7 @@ namespace dpct
         }
         unsigned int device_count() { return _devs.size(); }
 
-        unsigned int get_device_id(const sycl::device &dev)
+        unsigned int get_device_id(const sycl::device &dev) const
         {
             unsigned int id = 0;
             for (auto dev_item : _devs)
@@ -882,6 +886,18 @@ namespace dpct
             static dev_mgr d_m;
             return d_m;
         }
+
+        int get_work_group_size(unsigned int id) const {
+            std::lock_guard<std::recursive_mutex> lock(m_mutex);
+            check_id(id);
+            return _devs[id]->get_max_work_group_size();
+        }
+
+        int get_work_group_size(const sycl::device &dev) const {
+            unsigned int id = get_device_id(dev);
+            return get_work_group_size(id);
+        }
+
         dev_mgr(const dev_mgr &) = delete;
         dev_mgr &operator=(const dev_mgr &) = delete;
         dev_mgr(dev_mgr &&) = delete;
