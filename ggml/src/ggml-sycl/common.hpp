@@ -189,8 +189,6 @@ struct ggml_sycl_device_info {
     sycl_device_info devices[GGML_SYCL_MAX_DEVICES] = {};
 
     std::array<float, GGML_SYCL_MAX_DEVICES> default_tensor_split = {};
-
-    int max_work_group_sizes[GGML_SYCL_MAX_DEVICES] = {0};
 };
 
 const ggml_sycl_device_info & ggml_sycl_info();
@@ -292,6 +290,15 @@ struct ggml_backend_sycl_context {
         return pool(device);
     }
 };
+
+// common host functions
+
+static inline int get_work_group_size(const sycl::device& device) {
+    dpct::device_info prop;
+    dpct::get_device_info(prop, device);
+    return prop.get_max_work_group_size();
+}
+
 
 // common device functions
 

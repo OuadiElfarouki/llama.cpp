@@ -1908,8 +1908,6 @@ static ggml_sycl_device_info ggml_sycl_init() {
 
         info.devices[i].cc =
             100 * prop.get_major_version() + 10 * prop.get_minor_version();
-
-        info.max_work_group_sizes[i] = prop.get_max_work_group_size();
     }
 
     for (int id = 0; id < info.device_count; ++id) {

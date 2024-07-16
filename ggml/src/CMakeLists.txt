@@ -463,13 +463,13 @@ if (GGML_SYCL)
         message(FATAL_ERROR "Invalid backend chosen, supported options are INTEL or NVIDIA")
     endif()
 
-    if ( NOT DEFINED ENV{ONEAPI_ROOT})
-        message(FATAL_ERROR "Not detect ENV {ONEAPI_ROOT}, please install oneAPI & source it, like: source /opt/intel/oneapi/setvars.sh")
-    endif()
-    #todo: AOT
+    # if ( NOT DEFINED ENV{ONEAPI_ROOT})
+    #     message(FATAL_ERROR "Not detect ENV {ONEAPI_ROOT}, please install oneAPI & source it, like: source /opt/intel/oneapi/setvars.sh")
+    # endif()
+    # #todo: AOT
 
-    find_package(IntelSYCL REQUIRED)
-    find_package(MKL REQUIRED)
+    # find_package(IntelSYCL REQUIRED)
+    # find_package(MKL REQUIRED)
 
     message(STATUS "SYCL found")
 
@@ -503,7 +503,7 @@ if (GGML_SYCL)
         set(GGML_EXTRA_LIBS ${GGML_EXTRA_LIBS} IntelSYCL::SYCL_CXX MKL::MKL MKL::MKL_SYCL)
     else()
         add_compile_options(-I/${SYCL_INCLUDE_DIR})
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsycl -L${MKLROOT}/lib")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsycl -L$ENV{MKLROOT}/lib")
 
         if (GGML_SYCL_TARGET STREQUAL "INTEL")
             set(GGML_EXTRA_LIBS ${GGML_EXTRA_LIBS} -fsycl OpenCL mkl_core pthread m dl mkl_sycl_blas mkl_intel_ilp64 mkl_tbb_thread)
