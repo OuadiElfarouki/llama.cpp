@@ -49,7 +49,7 @@ bool   ggml_backend_is_sycl(ggml_backend_t backend);
 int    ggml_backend_sycl_get_device(ggml_backend_t backend);
 static bool ggml_backend_buffer_is_sycl_split(ggml_backend_buffer_t buffer);
 static inline int get_sycl_env(const char *env_name, int default_val);
-
+static inline int get_work_group_size(const sycl::device& device);
 
 void dev2dev_memcpy(sycl::queue &q_dst, sycl::queue &q_src, void *ptr_dst,
                     const void *ptr_src, size_t size) {
@@ -1909,7 +1909,6 @@ static ggml_sycl_device_info ggml_sycl_init() {
         info.devices[i].cc =
             100 * prop.get_major_version() + 10 * prop.get_minor_version();
 
-        info.max_work_group_sizes[i] = prop.get_max_work_group_size();
     }
 
     for (int id = 0; id < info.device_count; ++id) {

@@ -48,6 +48,8 @@ static int g_ggml_sycl_debug = 0;
   }()
 
 
+static int g_work_group_size = 0;
+
 #define __SYCL_ARCH__ DPCT_COMPATIBILITY_TEMP
 #define VER_4VEC 610 // todo for hardward optimize.
 #define VER_GEN9 700 // todo for hardward optimize.
@@ -190,7 +192,6 @@ struct ggml_sycl_device_info {
 
     std::array<float, GGML_SYCL_MAX_DEVICES> default_tensor_split = {};
 
-    int max_work_group_sizes[GGML_SYCL_MAX_DEVICES] = {0};
 };
 
 const ggml_sycl_device_info & ggml_sycl_info();
@@ -292,6 +293,13 @@ struct ggml_backend_sycl_context {
         return pool(device);
     }
 };
+
+
+static inline int get_work_group_size(const sycl::device& device) {
+    dpct::device_info prop;
+    dpct::get_device_info(prop, device);
+    return prop.get_max_work_group_size();
+}
 
 // common device functions
 
